@@ -1,96 +1,56 @@
-from PySide6.QtWidgets import (
-    QMainWindow,
-    QWidget,
-    QLabel,
-    QDockWidget,
-)
+from PySide6.QtWidgets import QMainWindow
 from PySide6.QtCore import Qt
+
+from warplab.ui.viewport import Viewport
+from warplab.ui.panels import (
+    create_scene_panel,
+    create_properties_panel,
+    create_console_panel,
+)
+
+from warplab.ui.menus import create_menu_bar
 
 
 class MainWindow(QMainWindow):
-    """
-    Main WarpLab application window.
-    """
 
     def __init__(self):
         super().__init__()
 
-        self._setup_window()
-        self._create_viewport()
-        self._create_docks()
-        self._create_menu()
+        self.setup()
 
-    def _setup_window(self):
-        self.setWindowTitle("WarpLab")
-        self.resize(1400, 900)
+    def setup(self):
 
-    def _create_viewport(self):
-        viewport = QLabel(
-            "WarpLab Viewport\n\nSimulation Area"
+        self.setWindowTitle(
+            "WarpLab"
         )
 
-        viewport.setAlignment(Qt.AlignCenter)
-
-        self.setCentralWidget(viewport)
-
-    def _create_docks(self):
-
-        # Scene Explorer
-
-        scene = QDockWidget(
-            "Scene Explorer",
-            self
+        self.resize(
+            1600,
+            900
         )
 
-        scene.setWidget(
-            QLabel("Objects\nUniverse\nCamera")
+        # Central viewport
+        self.setCentralWidget(
+            Viewport()
         )
+
+        # Dock panels
 
         self.addDockWidget(
             Qt.LeftDockWidgetArea,
-            scene
-        )
-
-
-        # Properties
-
-        properties = QDockWidget(
-            "Properties",
-            self
-        )
-
-        properties.setWidget(
-            QLabel("No object selected")
+            create_scene_panel(self)
         )
 
         self.addDockWidget(
             Qt.RightDockWidgetArea,
-            properties
-        )
-
-
-        # Console
-
-        console = QDockWidget(
-            "Console",
-            self
-        )
-
-        console.setWidget(
-            QLabel("WarpLab Console")
+            create_properties_panel(self)
         )
 
         self.addDockWidget(
             Qt.BottomDockWidgetArea,
-            console
+            create_console_panel(self)
         )
 
+        # Menu
 
-    def _create_menu(self):
-
-        menu = self.menuBar()
-
-        file_menu = menu.addMenu("File")
-        view_menu = menu.addMenu("View")
-        tools_menu = menu.addMenu("Tools")
-        help_menu = menu.addMenu("Help")
+        create_menu_bar(self)
