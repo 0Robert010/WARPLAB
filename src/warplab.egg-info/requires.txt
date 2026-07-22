@@ -1,0 +1,7 @@
+pyside6
+numpy
+scipy
+sympy
+einsteinpy
+pyvista
+vtk
